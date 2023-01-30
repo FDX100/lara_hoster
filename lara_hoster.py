@@ -15,8 +15,23 @@ def install_mysql():
     os.system('sudo mysql_secure_installation')
     os.system('sudo systemctl start mysql.service')
     print('[!] Mysql installed successfully!')
+def install_mariadb():
+    os.system('sudo apt-get update')
+    os.system('sudo apt-get install mariadb-server -y')
+    os.system('sudo systemctl start mariadb.service')
+    os.system('sudo mysql_secure_installation')
+    os.system('sudo systemctl start mariadb.service')
+    print('[!] mariadb installed successfully!')
+def install_nvm():
+    os.system('sudo apt-get update')
+    os.system('sudo apt-get install curl -y')
+    os.system('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash')
+    os.system('export NVM_DIR="$HOME/.nvm"')
+    os.system('[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm')
+    os.system('[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion')
+    print('[!] nvm installed successfully!')
 
-def install_laravel():
+def install_php_composer():
     version = input('[+] please type php version for example 8.1 >> ')
     os.system('sudo apt-get update')
     os.system('sudo apt-get install software-properties-common -y')
@@ -28,8 +43,6 @@ def install_laravel():
     os.system('sudo sudo apt-get install git composer -y')
     print(' composer and php installed successfully!')
 def add_new_domain(domain):
-    
-
     os.system('sudo mkdir /var/www/html/'+str(domain))
     os.system('sudo chown -R www-data:www-data /var/www/html/'+str(domain))
     confx ='''
@@ -110,8 +123,10 @@ github.com/FDX100
 1 => add new domain
 2 => remove domain
 3 => install nginx
-4 => install mysql 
+4 => install mysql Server
 5 => install PHP & composer
+6 => install MariaDB Server
+7 => install Nodejs
 other key to exit
     ''')
     try:
@@ -132,7 +147,11 @@ other key to exit
         elif(choice =='4'):
             install_mysql()
         elif(choice =='5'):
-            install_laravel()
+            install_php_composer()
+        elif(choice =='6'):
+            install_mariadb()
+        elif(choice =='7'):
+            install_nvm()
         else:
             print('[!] scipt is exited ')
             exit()    
