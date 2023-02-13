@@ -168,4 +168,4 @@ if('root' in str(root_command)):
         guide_msg()
 
 else:
-    print('[!] please run this tool as root')
+    print('[!] please run this tool as root.')
