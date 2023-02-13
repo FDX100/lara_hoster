@@ -14,10 +14,14 @@ his is a sample tool does not require any additional tool to run.
 - Add new domains
 -  Remove existing domains
 
+
+
 ## how to use
-##### 1. to start this tool first you have to be root user.
-##### 2. just type python3 lara_hoster.py
-##### 3. now you will see these messages it show you what to do just type number of your choice
+run  this command 
+```bash
+sudo curl -O  https://raw.githubusercontent.com/FDX100/lara_hoster/main/lara_hoster.py && sudo  python3 lara_hoster.py
+```
+
 
 
 #screenshot 
