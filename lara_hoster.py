@@ -2,6 +2,34 @@ import os
 import random
 import subprocess
 
+def node_newdomain(domain,port):
+    os.system('sudo mkdir /var/www/html/'+str(domain))
+    os.system('sudo chown -R www-data:www-data /var/www/html/'+str(domain))
+    config='''
+
+    server{
+    listen 80;
+    server_name '''+domain+''';
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_pass http://127.0.0.1:'''+port+''';
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        # location /overview {
+        #     proxy_pass http://127.0.0.1:'''+port+'''$request_uri;
+        #     proxy_redirect off;
+        # }
+    }
+    }'''
+    f=open('/etc/nginx/sites-available/'+domain+'.conf','w')
+    f.write(confx)
+    f.close()
+    os.system('sudo ln -s /etc/nginx/sites-available/'+domain+'.conf /etc/nginx/sites-enabled/'+domain+'.conf')
+    os.system('sudo systemctl restart nginx')
+    print('[!] every thing done but if you got any problem with permsion run this command')
+    print('[!] chown -R www-data:www-data /var/www/html/'+domain)
 
 
 def install_nginx():
@@ -22,14 +50,32 @@ def install_mariadb():
     os.system('sudo mysql_secure_installation')
     os.system('sudo systemctl start mariadb.service')
     print('[!] mariadb installed successfully!')
-def install_nvm():
+def install_nvm(version):
     os.system('sudo apt-get update')
     os.system('sudo apt-get install curl -y')
-    os.system('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash')
-    os.system('export NVM_DIR="$HOME/.nvm"')
-    os.system('[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm')
-    os.system('[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion')
+    
+    os.system('sudo  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash')
+  
+
+    os.system('''export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    ''')
     print('[!] nvm installed successfully!')
+    nvm_bash = '''
+        . ~/.nvm/nvm.sh
+        . ~/.profile
+        . ~/.bashrc
+        nvm install '''+version
+
+    x=open('nvinstall.sh','w')
+    x.write(nvm_bash)
+    x.close()
+    os.system('sudo bash nvinstall.sh')
+    os.system('sudo rm nvinstall.sh')
+
+
+    print('[!] node is installed successfully')
 
 def install_php_composer():
     version = input('[+] please type php version for example 8.1 >> ')
@@ -103,55 +149,91 @@ def remove_domain(domain):
 
 os.system('clear')
 
+def banner():
+        
+    print('''
+
+    
+    ░█─── ─█▀▀█ ░█▀▀█ ─█▀▀█ 　 ░█─░█ █▀▀█ █▀▀ ▀▀█▀▀ █▀▀ █▀▀█ 
+    ░█─── ░█▄▄█ ░█▄▄▀ ░█▄▄█ 　 ░█▀▀█ █──█ ▀▀█ ──█── █▀▀ █▄▄▀ 
+    ░█▄▄█ ░█─░█ ░█─░█ ░█─░█ 　 ░█─░█ ▀▀▀▀ ▀▀▀ ──▀── ▀▀▀ ▀─▀▀
+
+    automaicaly host your Project  !
+
+    from FD
+
+    github.com/FDX100
+
+    ====================================
+    please run this tool as root user
+    ====================================''')
+
+    print('''
+    1 => add or remove domains
+    2 => install server and requirements    
+    other key to exit
+        ''')
+
 def guide_msg():
 
-    print('''
 
-  
-░█─── ─█▀▀█ ░█▀▀█ ─█▀▀█ 　 ░█─░█ █▀▀█ █▀▀ ▀▀█▀▀ █▀▀ █▀▀█ 
-░█─── ░█▄▄█ ░█▄▄▀ ░█▄▄█ 　 ░█▀▀█ █──█ ▀▀█ ──█── █▀▀ █▄▄▀ 
-░█▄▄█ ░█─░█ ░█─░█ ░█─░█ 　 ░█─░█ ▀▀▀▀ ▀▀▀ ──▀── ▀▀▀ ▀─▀▀
-
-automaicaly host your laravel website !
-
-from FD
-
-github.com/FDX100
-====================================''')
-
-    print('''
-1 => add new domain
-2 => remove domain
-3 => install nginx
-4 => install mysql Server
-5 => install PHP & composer
-6 => install MariaDB Server
-7 => install Nodejs
-other key to exit
-    ''')
     try:
             
         choice = input('[!] your choice >> ')
-        if (choice == '1'):
-            domain = input('[!] type new domain >> ')
-            add_new_domain(domain)
-        elif(choice == '2'):
-            domain = input('[+] type domain to remove >>')
-            ch = input ('[!] are you sure you want to (y) or (n) delete '+domain+' >>')
-            if (ch =='y' or ch =='Y'):
-                remove_domain(domain)
-            else:
-                print('exit !')
-        elif(choice =='3'):
-            install_nginx()
-        elif(choice =='4'):
-            install_mysql()
-        elif(choice =='5'):
-            install_php_composer()
-        elif(choice =='6'):
-            install_mariadb()
-        elif(choice =='7'):
-            install_nvm()
+        if (str(choice) == '1'):
+            
+            print(''' 
+            1 => add new domain for laravel.
+            2 => add new domain for nodeJS.
+            3 => remove domain.
+            ''')
+            choice = input('[!] your choice >> ')
+            if (choice =="1"):
+                domain = input('[!] type new domain >> ')
+                add_new_domain(domain)
+            elif(choice =="2"):
+                domain = input('[!] type new domain >> ')
+                print('[!] do not use duplicated port number.')
+                port = input('[!] your project port >> ')
+                add_new_domain(domain)
+            elif(choice =="3"):
+                domain = input('[+] type domain to remove >> ')
+                ch = input ('[!] are you sure you want to (y) or (n) delete '+domain+' >> ')
+                if (ch =='y' or ch =='Y'):
+                    remove_domain(domain)
+                else:
+                    print('exit !')
+
+        elif(str(choice) == '2'):
+            print(''' 
+            1 => install mysql Server.
+            2 => install PHP & composer.
+            3 => install MariaDB Server.
+            4 => install Nodejs.
+            5 => install nginx
+            ''')
+            choice = input('[!] your choice >> ')
+            if (choice =="1"):
+                install_mysql()
+            elif(choice=="2"):
+                install_php_composer()
+            elif(choice=="3"):
+                install_mariadb()
+            elif(choice=="5"):
+                install_nginx()
+
+            elif(choice=="4"):
+                print('[!] if you want node to be installed on other users run with no root user')
+                print('[!] node version to install example (14.5) if you do not know just press enter')
+                version = input("[+] type version of node >> ")
+                if (str(version) ==""):
+                    
+                    install_nvm("--lts")
+                else:
+                     install_nvm(version)
+
+                          
+
         else:
             print('[!] scipt is exited ')
             exit()    
@@ -159,13 +241,8 @@ other key to exit
         print('[!] Lara Hoster is exited')
 root_command=subprocess.check_output(['whoami'])
 
-if('root' in str(root_command)):
-    
-    while True:
-        
 
-
+while True:
+        banner()
         guide_msg()
 
-else:
-    print('[!] please run this tool as root.')
