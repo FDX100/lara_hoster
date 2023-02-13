@@ -1,8 +1,8 @@
 # Lara Hoster
 
-It's never been easier to host Laravel on Ubuntu and Debian. 
+It's never been easier to host Laravel and NodeJS on Ubuntu and Debian. 
 
-his is a sample tool does not require any additional tool to run.
+This is a sample tool does not require any additional tool to run.
 
 ### this tool can do.
 
@@ -11,7 +11,10 @@ his is a sample tool does not require any additional tool to run.
 - nginx
 - PHP & Laravel
 - Mysql
-- Add new domains
+- Nvm
+- NodeJS
+- Host Laravel Project
+-  Host NodeJS Project
 -  Remove existing domains
 
 
@@ -21,12 +24,14 @@ run  this command
 ```bash
 sudo curl -O  https://raw.githubusercontent.com/FDX100/lara_hoster/main/lara_hoster.py && sudo  python3 lara_hoster.py
 ```
+> you have to install nginx 
 
 
 
 #screenshot 
 
-[![](https://i.postimg.cc/C5N2TnFv/Screenshot-from-2022-12-23-19-39-45.png)](https://i.postimg.cc/C5N2TnFv/Screenshot-from-2022-12-23-19-39-45.png)
+[![](https://i.ibb.co/nQfNg0N/Screenshot-from-2023-02-13-23-24-50.png)](https://i.ibb.co/nQfNg0N/Screenshot-from-2023-02-13-23-24-50.png)
+
 
 ###### Please get in touch if you have any new ideas. 
 ###### Keep in mind that this is the first version. 
